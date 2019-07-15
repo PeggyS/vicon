@@ -34,6 +34,7 @@ end
 
 % open the file
 fid = fopen(filename, 'r');
+data.filename = filename;
 txt = 'init';
 
 while ischar(txt) % txt will change to -1 when end of file is reached

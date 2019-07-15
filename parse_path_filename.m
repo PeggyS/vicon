@@ -19,7 +19,7 @@ else
 end
 
 % session
-tmp_str = regexpi(handles.edit_filename.String, '/(pre)|(mid)|(post)|(followup)|(fu)/', 'match');
+tmp_str = regexpi(handles.edit_filename.String, '/(pre)|(mid)|(post)|(followup2)|(followup)|(fu2)|(fu)/', 'match');
 if ~isempty(tmp_str)
 	sess = lower(strrep(tmp_str{:},'/',''));
 else
@@ -34,6 +34,8 @@ switch sess
 		handles.popmenuSession.Value = 3;
 	case {'followup', 'fu'}
 		handles.popmenuSession.Value = 4;
+	case {'followup2', 'fu2'}
+		handles.popmenuSession.Value = 5;
 end
 
 % all trial numbers in the folder

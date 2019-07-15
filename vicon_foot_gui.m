@@ -184,7 +184,7 @@ function popmenuSession_Callback(hObject, eventdata, handles)
 % hObject    handle to popmenuSession (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-old_sess_str = regexpi(handles.edit_filename.String, '/((pre)|(mid)|(post)|(followup)|(fu))/', 'match');
+old_sess_str = regexpi(handles.edit_filename.String, '/((pre)|(mid)|(post)|(followup)|(followup2)|(fu)|(fu2))/', 'match');
 new_sess_str = hObject.String{hObject.Value};
 handles.edit_filename.String = strrep(handles.edit_filename.String, old_sess_str{1}, ['/' new_sess_str '/']);
 edit_filename_Callback([], [], handles)

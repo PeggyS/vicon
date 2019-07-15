@@ -2,7 +2,7 @@ function prelim_plots()
 %
 
 % open connection to database
-dbparams = get_db_login_params();
+dbparams = get_db_login_params('tdcs_vgait');
 conn = dbConnect(dbparams.dbname, dbparams.user, dbparams.password, dbparams.serveraddr);
 
 % get table from the database

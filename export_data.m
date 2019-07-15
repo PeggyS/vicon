@@ -129,7 +129,7 @@ gc_data_tbl = horzcat(gc_data_tbl, fp_tbl);
 fpfig_list = {'figure_fp1', 'figure_fp2'};
 for fp_cnt = 1:length(fpfig_list)
 	fp_fig = fpfig_list{fp_cnt};
-	if isfield(handles, fp_fig)
+	if isfield(handles, fp_fig) && isgraphics(handles.(fp_fig))
 		
 		% force plate vertical data (from the line in the figure)
 		h_data_line = findobj(handles.(fp_fig),'-regexp', 'Tag','line_.*Fz_N');
@@ -150,6 +150,24 @@ for fp_cnt = 1:length(fpfig_list)
 		end
 		data = abs(data);
 		[start_ind, end_ind] = find_continuous(data > 10, 500); % find at least 0.5s * 1000 samp/s = 500 samples of data above threshold
+		% if there looks like more than 1 foot strike (segments of continuous data
+		if length(start_ind) > 1
+			list_string = cell(length(start_ind),1);
+			% ask which segment to use as fp data
+			for ind_cnt = 1:length(start_ind)
+				list_string{ind_cnt} = [num2str(h_data_line.XData(start_ind(ind_cnt))) ' - ' ...
+					num2str(h_data_line.XData(end_ind(ind_cnt)))];
+			end
+			[sel, ok] = listdlg('ListString', list_string);
+			if ok
+				start_ind = start_ind(sel);
+				end_ind = end_ind(sel);
+			else
+				return
+			end
+% 			keyboard
+		end
+		
 		mid_ind = floor(mean([start_ind, end_ind]));
 		
 		% corresponding hs & to
@@ -202,8 +220,8 @@ for fp_cnt = 1:length(fpfig_list)
 			% verify hs & to times occur within the fp data time
 			assert(contra_hs_time>h_data_line.XData(start_ind) && contra_to_time>h_data_line.XData(start_ind) ...
 				&& contra_hs_time<h_data_line.XData(end_ind) && contra_to_time<h_data_line.XData(end_ind), 'hs & to not within fp times')
-			ss_start_ind = find(h_data_line.XData >= contra_to_time);
-			ss_end_ind = find(h_data_line.XData >= contra_hs_time);
+			ss_start_ind = find(h_data_line.XData >= contra_to_time,1);
+			ss_end_ind = find(h_data_line.XData >= contra_hs_time,1);
 			
 			% single stance force plate data
 			ss_fp_max = max(data(ss_start_ind:ss_end_ind));
@@ -249,29 +267,52 @@ for fp_cnt = 1:length(fpfig_list)
 				norm_grf_y = h_ax.UserData.norm_grf.y(msk);
 				norm_grf_z = h_ax.UserData.norm_grf.z(msk);
 
-				norm_grf_z_peak = max(norm_grf_z);
-				norm_grf_z_mean = mean(norm_grf_z);
-				norm_grf_z_auc = trapz(norm_grf_t, norm_grf_z);
-				
-				ss_t = h_ax.UserData.norm_grf.t >= contra_to_time & h_ax.UserData.norm_grf.t <= contra_hs_time;
-				ss_norm_grf_z_peak = max(h_ax.UserData.norm_grf.z(ss_t));
-				ss_norm_grf_z_mean = mean(h_ax.UserData.norm_grf.z(ss_t));
-				ss_norm_grf_z_auc = trapz(h_ax.UserData.norm_grf.t(ss_t), h_ax.UserData.norm_grf.z(ss_t));
-
-				% norm of the whole normalised grf
-				norm_grf_norm = nan(size(norm_grf_z));
-				for vec_cnt = 1:length(norm_grf_z)
-					norm_grf_norm(vec_cnt) = norm([norm_grf_x(vec_cnt), norm_grf_y(vec_cnt), norm_grf_z(vec_cnt)]);
+				if isempty(norm_grf_z)
+					norm_grf_z_peak = nan;
+					norm_grf_z_mean = nan;
+					norm_grf_z_auc = nan;
+					norm_grf_norm_peak = nan;
+					norm_grf_norm_mean = nan;
+					norm_grf_norm_auc = nan;
+					norm_ss_t = nan;
+					ss_norm_grf_norm_peak = nan;
+					ss_norm_grf_norm_mean = nan;
+					ss_norm_grf_norm_auc = nan;
+					norm_grf_z_peak = nan;
+					norm_grf_z_mean = nan;
+					norm_grf_z_auc = nan;
+					ss_norm_grf_z_peak = nan;
+					ss_norm_grf_z_mean = nan;
+					ss_norm_grf_z_auc = nan;
+					
+				else
+					norm_grf_z_peak = max(norm_grf_z);
+					norm_grf_z_mean = mean(norm_grf_z);
+					norm_grf_z_auc = trapz(norm_grf_t, norm_grf_z);
+					
+					
+					ss_t = h_ax.UserData.norm_grf.t >= contra_to_time & h_ax.UserData.norm_grf.t <= contra_hs_time;
+					ss_norm_grf_z_peak = max(h_ax.UserData.norm_grf.z(ss_t));
+					if isempty(ss_norm_grf_z_peak), ss_norm_grf_z_peak = nan; end
+					ss_norm_grf_z_mean = mean(h_ax.UserData.norm_grf.z(ss_t));
+					ss_norm_grf_z_auc = trapz(h_ax.UserData.norm_grf.t(ss_t), h_ax.UserData.norm_grf.z(ss_t));
+					
+					% norm of the whole normalised grf
+					norm_grf_norm = nan(size(norm_grf_z));
+					for vec_cnt = 1:length(norm_grf_z)
+						norm_grf_norm(vec_cnt) = norm([norm_grf_x(vec_cnt), norm_grf_y(vec_cnt), norm_grf_z(vec_cnt)]);
+					end
+					norm_grf_norm_peak = max(norm_grf_norm);
+					norm_grf_norm_mean = nanmean(norm_grf_norm);
+					norm_grf_norm_auc = trapz(norm_grf_t, norm_grf_norm);
+					
+					norm_ss_t = norm_grf_t >= contra_to_time & norm_grf_t <= contra_hs_time;
+					
+					
+					ss_norm_grf_norm_peak = max(norm_grf_norm(norm_ss_t));
+					ss_norm_grf_norm_mean = nanmean(norm_grf_norm(norm_ss_t));
+					ss_norm_grf_norm_auc = trapz(norm_grf_t(norm_ss_t), norm_grf_norm(norm_ss_t));
 				end
-				norm_grf_norm_peak = max(norm_grf_norm);
-				norm_grf_norm_mean = nanmean(norm_grf_norm);
-				norm_grf_norm_auc = trapz(norm_grf_t, norm_grf_norm);
-				
-				norm_ss_t = norm_grf_t >= contra_to_time & norm_grf_t <= contra_hs_time;
-				ss_norm_grf_norm_peak = max(norm_grf_norm(norm_ss_t));
-				ss_norm_grf_norm_mean = nanmean(norm_grf_norm(norm_ss_t));
-				ss_norm_grf_norm_auc = trapz(norm_grf_t(norm_ss_t), norm_grf_norm(norm_ss_t));
-
 				gc_data_tbl(gc_ind,var_names) = {norm_grf_z_peak, norm_grf_z_mean, norm_grf_z_auc, ...
 					norm_grf_norm_peak, norm_grf_norm_mean, norm_grf_norm_auc, ...
 					ss_norm_grf_z_peak, ss_norm_grf_z_mean, ss_norm_grf_z_auc, ...

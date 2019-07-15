@@ -2,7 +2,7 @@ function check_database(handles)
 % check the database for this data_collection and trial 
 
 % open connection to database
-dbparams = get_db_login_params();
+dbparams = get_db_login_params('tdcs_vgait');
 
 try
 	conn = dbConnect(dbparams.dbname, dbparams.user, dbparams.password, dbparams.serveraddr);

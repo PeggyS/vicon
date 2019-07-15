@@ -4,7 +4,7 @@ function vicon_info2db(handles, gc_data_tbl)
 %
 
 % open connection to database
-dbparams = get_db_login_params();
+dbparams = get_db_login_params('tdcs_vgait');
 dbtable = 'vicon_steps';
 % % since this takes a while, display a waitbar
 % hwb = waitbar(0, 'Sending Gait Info Data to the Database');
