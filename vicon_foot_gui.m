@@ -128,6 +128,7 @@ handles = guidata(handles.figure1);
 handles = parse_path_filename(handles);
 waitbar(0.2, handles.h_waitbar, 'loading data')
 handles = load_data(handles);
+handles = create_insole_figure(handles, 'Left');
 waitbar(0.8, handles.h_waitbar, 'checking database')
 check_database(handles);
 guidata(handles.figure1, handles);

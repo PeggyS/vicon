@@ -1,4 +1,4 @@
-function endVertLineMotionFcn(hLine)
+function vertLineMotionFcn(hLine)
 % as the vertical line moves, update the value text
 % text handle is stored in the hLine's userdata
 
