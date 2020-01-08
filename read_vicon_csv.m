@@ -26,20 +26,40 @@ function data = read_vicon_csv(filename)
 
 % Author: Peggy Skelly
 % 2017-08-03: create 
+% 2020-01-07: with the upgrade in Vicon from 1.8 to 2, the csv files are
+% saved as UTF-8 in version 2. In version 1.8 they were saved as 'Western
+% (Windows 1252)' and the default encoding 'ISO-8859-1' to read in worked fine. 
+% If the file date of the csv file is older than 2019-12-01, then use the
+% old encoding. If it is later, then use UTF-8 encoding to read it in.
 
 
 if ~exist(filename, 'file')
 	error('%s does not exist', filename);
 end
 
-% open the file
-fid = fopen(filename, 'r');
-data.filename = filename;
-txt = 'init';
+% check the file's date to decide what encoding to use when reading in
+f_info = dir(filename);
+cutoff_datenum = datenum(2019,12,01); % date defining the use of different encoding
+if f_info.datenum >= cutoff_datenum
+	encoding = 'UTF-8';
+else
+	encoding = 'ISO-8859-1';
+end
 
+% open the file
+fid = fopen(filename, 'r', 'n', encoding);
+data.filename = filename;
+
+% read in 1st line
+txt = fgetl(fid);
+% remove wierd first character that seems to be present in vicon nexus
+% 2.8.2 when exporting accelerations
+if double(txt(1)) == 65279
+	txt = txt(2:end);
+end
+	
 while ischar(txt) % txt will change to -1 when end of file is reached
-	% read in 1 line
-	txt = fgetl(fid);
+	
 	% look for keywords: Events, Devices, Model Outputs
 	switch txt
 		case 'Events'
@@ -51,7 +71,8 @@ while ischar(txt) % txt will change to -1 when end of file is reached
 		case 'Trajectories'
 			data.markers = read_model_outputs(fid);
 	end
-	
+	% read in next line
+	txt = fgetl(fid);
 	
 end
 	
