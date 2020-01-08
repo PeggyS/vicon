@@ -135,9 +135,9 @@ waitbar(0.7, handles.h_waitbar, 'checking database')
 check_database(handles);
 guidata(handles.figure1, handles);
 handles = guidata(handles.figure1);
+waitbar(0.9, handles.h_waitbar, 'computing events')
 pbComputeFF_Callback([], [], handles)
 handles = guidata(handles.figure1);
-waitbar(0.9, handles.h_waitbar, 'computing events')
 pbComputeEvents_Callback([], [], handles)
 
 close(handles.h_waitbar)
