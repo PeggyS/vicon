@@ -1,7 +1,7 @@
 function val_str = get_line_display_data(h_vertical_line)
 
 % find the visible data lines (lines with tags containing X, Y, or Z
-h_data_lines = findobj(h_vertical_line.Parent, '-regexp', 'Tag', '.*(_(X)|(Y)|(Z)_).*', 'Visible','on');
+h_data_lines = findobj(h_vertical_line.Parent, '-regexp', 'Tag', '.*(_(X)|(Y)|(Z)|(fsr)_).*', 'Visible','on');
 % get the ydata at the xposition of h_vertical_line
 val_str = cell(length(h_data_lines));
 for l_cnt = 1:length(h_data_lines)

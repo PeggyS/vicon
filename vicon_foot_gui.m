@@ -128,14 +128,18 @@ handles = guidata(handles.figure1);
 handles = parse_path_filename(handles);
 waitbar(0.2, handles.h_waitbar, 'loading data')
 handles = load_data(handles);
+waitbar(0.5, handles.h_waitbar, 'creating figures')
 handles = create_insole_figure(handles, 'Left');
-waitbar(0.8, handles.h_waitbar, 'checking database')
+handles = create_insole_figure(handles, 'Right');
+waitbar(0.7, handles.h_waitbar, 'checking database')
 check_database(handles);
 guidata(handles.figure1, handles);
 handles = guidata(handles.figure1);
 pbComputeFF_Callback([], [], handles)
 handles = guidata(handles.figure1);
+waitbar(0.9, handles.h_waitbar, 'computing events')
 pbComputeEvents_Callback([], [], handles)
+
 close(handles.h_waitbar)
 
 function clear_fp_checkboxes(handles)

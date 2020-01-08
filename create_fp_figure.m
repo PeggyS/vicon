@@ -58,9 +58,9 @@ end
 hs_str = [side(1) 'hs'];
 to_str = [side(1) 'to'];
 % heel strikes - black lines
-add_event_lines(h_ax, handles.event_struct.(hs_str), 'k', hs_str)
+handles.event_struct.(hs_str) = add_event_lines(h_ax, handles.event_struct.(hs_str), 'k', hs_str);
 % toe off - green lines
-add_event_lines(h_ax, handles.event_struct.(to_str), [0 0.8 0.1], to_str)
+handles.event_struct.(to_str) = add_event_lines(h_ax, handles.event_struct.(to_str), [0 0.8 0.1], to_str);
 
 % add menu to identify time segement of force data when the other toe has hit
 % the force plate

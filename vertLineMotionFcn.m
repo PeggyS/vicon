@@ -15,3 +15,5 @@ xValue = get(hLine, 'XData');
 val_str = get_line_display_data(hLine);
 set(ud.hText, 'Position', [xValue(1) oldPos(2)], 'String', val_str);
 
+update_hs_to_events(hLine)
+

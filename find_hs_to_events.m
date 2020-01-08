@@ -31,11 +31,11 @@ right.ff_times = handles.event_struct.rff;
 [rhs_times, rto_times] = find_hs_to_times(handles, t, right);
 
 % save info in a struct
-handles.event_struct.rhs = rhs_times;
-handles.event_struct.rto = rto_times;
+handles.event_struct.rhs.times = rhs_times;
+handles.event_struct.rto.times = rto_times;
 
-handles.event_struct.lhs = lhs_times;
-handles.event_struct.lto = lto_times;
+handles.event_struct.lhs.times = lhs_times;
+handles.event_struct.lto.times = lto_times;
 
 end % find_hs_to_events
 
