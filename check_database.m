@@ -16,8 +16,8 @@ if length(full_subj) < 9
 	full_subj = strcat(subj, 'tdvg');
 end
 
+% check for this trial of data 
 % select last_update from tdcs_vgait.vicon_steps where subj = 's2702tdvg' and data_collect = 'pre' and trial = 18;
-
 result = conn.dbSearch('vicon_steps', 'last_update',...
                            'subj', full_subj, ...
 					   'data_collect', handles.popmenuSession.String{handles.popmenuSession.Value}, ...

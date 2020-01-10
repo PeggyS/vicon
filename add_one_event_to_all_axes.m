@@ -12,7 +12,9 @@ for ax_cnt = 1:length(h_ax_list)
 	h_txt = text(h_ax, evt_time, mean(h_ax.YLim), val_str, 'Visible', 'off');
 	% add context menu to the line
 	axes(h_ax) %#ok<LAXES>
-	createLineCMenu(h_l(ax_cnt), h_txt)
+	createLineCMenu(h_l(ax_cnt), h_txt);
+	% by default, turn on draggable
+	menuDraggable_Callback(h_l(ax_cnt).UserData.hMenuDrag, [], h_l(ax_cnt))
 	
 end
 return

@@ -118,6 +118,9 @@ return
 function tbl = read_data_table(fid, col_names)
 tbl = table();
 
+% pre allocate data_mat with a lot of rows
+data_mat = nan(1e6,1);
+
 % read lines until there is a blank line
 txt = fgetl(fid);
 line_cnt = 0;
@@ -145,6 +148,8 @@ while ~isempty(txt)
 
 	txt = fgetl(fid);
 end
+data_mat = data_mat(~isnan(data_mat(:,1)),:); % remove rows with nan in the 1st column
+
 tbl = array2table(data_mat, 'VariableNames', col_names);
 return
 

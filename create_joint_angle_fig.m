@@ -34,6 +34,9 @@ end
 % the figure
 handles.joint_angle_fig = figure('position', [1000         438         640         900], ...
 	'Tag', 'joint_angle_fig');
+
+% FIXME - add close function to remove the linkprops to the event lines 
+
 % save the main gui figure in the userdata of the joint angle figure
 handles.joint_angle_fig.UserData.parent_gui = handles.figure1;
 
@@ -65,10 +68,10 @@ end
 hs_str = [lower(side(1)) 'hs'];
 to_str = [lower(side(1)) 'to'];
 % heel strikes - black lines
-add_event_lines(h_ax_hip, handles.event_struct.(hs_str), 'k', hs_str)
-add_event_lines(h_ax_knee, handles.event_struct.(hs_str), 'k', hs_str)
-add_event_lines(h_ax_ankle, handles.event_struct.(hs_str), 'k', hs_str)
+add_event_lines(h_ax_hip, handles.event_struct.(hs_str), 'k', hs_str);
+add_event_lines(h_ax_knee, handles.event_struct.(hs_str), 'k', hs_str);
+add_event_lines(h_ax_ankle, handles.event_struct.(hs_str), 'k', hs_str);
 % toe off - green lines
-add_event_lines(h_ax_hip, handles.event_struct.(to_str), [0 0.8 0.1], to_str)
-add_event_lines(h_ax_knee, handles.event_struct.(to_str), [0 0.8 0.1], to_str)
-add_event_lines(h_ax_ankle, handles.event_struct.(to_str), [0 0.8 0.1], to_str)
+add_event_lines(h_ax_hip, handles.event_struct.(to_str), [0 0.8 0.1], to_str);
+add_event_lines(h_ax_knee, handles.event_struct.(to_str), [0 0.8 0.1], to_str);
+add_event_lines(h_ax_ankle, handles.event_struct.(to_str), [0 0.8 0.1], to_str);
